@@ -9,7 +9,8 @@ run:
   path: src/build.sh
     
 inputs:
-  - name: src
+  - name: libressl-src
+    path: src
 
 outputs:
   - name: libressl
