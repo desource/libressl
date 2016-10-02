@@ -3,8 +3,8 @@
 # Download and build libressl
 set -euo pipefail
 
-src=$PWD/src
-out=$PWD/libressl
+src=$PWD/libressl
+out=$PWD/out
 
 # _download "version" "sha256"
 _download() {

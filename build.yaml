@@ -5,12 +5,13 @@ image_resource:
   source: {repository: quay.io/desource/alpine, tag: build}
 
 run:
-  path: src/build.sh
+  path: ci/build.sh
     
 inputs:
-  - name: libressl-src
-    path: src
+  - name: libressl-ci
+    path: ci
 
 outputs:
   - name: libressl
+    path: out
   
