@@ -1,19 +1,26 @@
 #!/usr/bin/env sh
-set -eux
+#
+# Download and build libressl
+set -euo pipefail
 
-LIBRESSL_VERSION=2.4.2
-LIBRESSL_SHA512=abacecb318a787f5ef9d8469638b7485fe237d4d993f410d7da8c0773ab8eff8c7da988fe965f793b268711afe599dc28f994eedeaa2aafebeb40faa30af38db
+src=$PWD/src
+out=$PWD/libressl
 
-SRC=$PWD/src
-OUT=$PWD/libressl
+# _download "version" "sha256"
+_download() {
+  mkdir -p ${src}
+  curl -OL http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${1}.tar.gz
+  echo "${2}  libressl-${1}.tar.gz" | sha256sum -c
+  tar -C ${src} --strip-components 1 -xf libressl-${1}.tar.gz
+}
 
-mkdir -p $SRC
-curl -OL http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-$LIBRESSL_VERSION.tar.gz
-echo "$LIBRESSL_SHA512  libressl-$LIBRESSL_VERSION.tar.gz" | sha512sum -c
-tar -C $SRC --strip-components 1 -xf libressl-$LIBRESSL_VERSION.tar.gz
+_build() {
+  mkdir -p ${src}/build
+  cd ${src}/build
+  ../configure --prefix=${out} --disable-shared
+  make
+  make install
+}
 
-mkdir -p $SRC/build
-cd $SRC/build
-../configure --prefix=$OUT --disable-shared
-make
-make install
+_download 2.4.3 bd5726f3e247e7a7d30ce69946d174b8fb92d999d22710c65f176c969812960e
+_build
